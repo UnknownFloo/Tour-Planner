@@ -1,0 +1,59 @@
+<div class="create-tour-container">
+  <div class="back-button">
+    <a routerLink="/dashboard" class="btn-back">← Zurück zum Dashboard</a>
+  </div>
+
+  <h1>Tour bearbeiten</h1>
+
+  <div class="create-content">
+    <aside class="form-section">
+      <form class="tour-form">
+        <div class="form-group">
+          <label for="title">Titel:</label>
+          <input id="title" type="text" [(ngModel)]="title" name="title" required>
+        </div>
+
+        <div class="form-group">
+          <label for="author">Autor:</label>
+          <input id="author" type="text" [(ngModel)]="author" name="author" required>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Beschreibung:</label>
+          <textarea id="description" [(ngModel)]="description" name="description" rows="2" placeholder="Beschreibe deine Tour..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="vehicle">Fahrzeug:</label>
+          <select id="vehicle" [(ngModel)]="vehicleType" name="vehicle">
+            <option value="cycling-regular">Fahrrad (normal)</option>
+            <option value="cycling-road">Rennrad</option>
+            <option value="cycling-mountain">Mountainbike</option>
+            <option value="cycling-electric">E-Bike</option>
+            <option value="driving-car">Auto</option>
+            <option value="foot-walking">Zu Fuß</option>
+            <option value="foot-hiking">Wandern</option>
+          </select>
+        </div>
+        <button type="button" class="btn-save" (click)="saveTour()" [disabled]="!isTourFormValid()">Änderungen speichern</button>
+      </form>
+    </aside>
+
+    <section class="map-section">
+      <h2>Wähle Start und Ende auf der Karte</h2>
+      <p>1. Klick für Start (blauer Marker), 2. Klick für Ende (roter Marker).</p>
+      <div class="map-container">
+        <app-leaflet
+          [interactable]="true"
+          [startCoords]="startCoord ?? undefined"
+          [endCoords]="endCoord ?? undefined"
+          [vehicleType]="vehicleType"
+          (startCoordinateClicked)="onStartSelected($event)"
+          (endCoordinateClicked)="onEndSelected($event)"
+          (distance)="setDistance($event)"
+          (time)="setTime($event)">
+        </app-leaflet>
+      </div>
+    </section>
+  </div>
+</div>

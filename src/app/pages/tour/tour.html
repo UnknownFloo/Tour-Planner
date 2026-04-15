@@ -1,0 +1,149 @@
+@if (tour(); as currentTour) {
+  <div class="tour-container">
+    <div class="back-button">
+      <a routerLink="/dashboard" class="btn-back">← Zurück zum Dashboard</a>
+    </div>
+
+    <div class="tour-content">
+      <aside class="tour-info">
+        <h1 class="tour-title">{{ currentTour.name }}</h1>
+        <div class="tour-attributes">
+          <p class="tour-author"><strong>ID:</strong> {{ currentTour.id }}</p>
+          <p class="tour-author"><strong>Von:</strong> {{ currentTour.author }}</p>
+          <p class="tour-vehicle"><strong>Fahrzeug:</strong> {{ currentTour.vehicleType }}</p>
+          <p class="tour-author"><strong>Start:</strong> {{ currentTour.startCoordinate.lat | number:'1.6-6' }}, {{ currentTour.startCoordinate.lng | number:'1.6-6' }}</p>
+          <p class="tour-author"><strong>Ende:</strong> {{ currentTour.endCoordinate.lat | number:'1.6-6' }}, {{ currentTour.endCoordinate.lng | number:'1.6-6' }}</p>
+          <p class="tour-author"><strong>Distanz:</strong> {{ distance | number:'1.2-2' }} km</p>
+          <p class="tour-author"><strong>Zeit:</strong> {{ time | number:'1.0-0' }} min</p>
+          @if (currentTour.description) {
+            <p class="tour-description"><strong>Beschreibung:</strong> {{ currentTour.description }}</p>
+          }
+        </div>
+        <div class="flex gap-2 mt-4 mb-4">
+          <a [routerLink]="['/edit-tour', currentTour.id]" class="btn-back">Tour bearbeiten</a>
+          <button type="button" class="btn-back" (click)="deleteCurrentTour()">Tour löschen</button>
+        </div>
+        
+      </aside>
+
+      <section class="tour-map">
+        <div class="map-container">
+          <app-leaflet
+            [interactable]="false"
+            [startCoords]="currentTour.startCoordinate"
+            [endCoords]="currentTour.endCoordinate"
+            [vehicleType]="currentTour.vehicleType"
+            (distance)="setDistance($event)"
+            (time)="setTime($event)">
+          </app-leaflet>
+        </div>
+      </section>
+    </div>
+
+    <section class="tour-comments" aria-labelledby="tour-comments-title">
+      <h2 id="tour-comments-title">Kommentare ({{ currentTour.tourComments.length }})</h2>
+
+      <form class="comment-form" (ngSubmit)="saveComment()">
+        <div class="comment-form-grid">
+          <div class="form-group">
+            <label for="comment-title">Titel</label>
+            <input id="comment-title" type="text" [(ngModel)]="commentTitle" name="commentTitle" required>
+          </div>
+          <div class="form-group">
+            <label for="comment-author">Autor</label>
+            <input id="comment-author" type="text" [(ngModel)]="commentAuthor" name="commentAuthor" required>
+          </div>
+          <div class="form-group">
+            <label for="comment-difficulty">Schwierigkeit</label>
+            <select id="comment-difficulty" [(ngModel)]="commentDifficulty" name="commentDifficulty">
+              <option [ngValue]="1">1</option>
+              <option [ngValue]="2">2</option>
+              <option [ngValue]="3">3</option>
+              <option [ngValue]="4">4</option>
+              <option [ngValue]="5">5</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="comment-enjoyment">Genuss</label>
+            <select id="comment-enjoyment" [(ngModel)]="commentEnjoyment" name="commentEnjoyment">
+              <option [ngValue]="1">1</option>
+              <option [ngValue]="2">2</option>
+              <option [ngValue]="3">3</option>
+              <option [ngValue]="4">4</option>
+              <option [ngValue]="5">5</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="comment-text">Kommentar (optional)</label>
+          <textarea id="comment-text" rows="2" [(ngModel)]="commentText" name="commentText"></textarea>
+        </div>
+
+        <div class="comment-form-actions">
+          <button type="submit" class="btn-back" [disabled]="!isCommentFormValid()">
+            @if (editingCommentId !== null) {Kommentar speichern} @else {Kommentar hinzufügen}
+          </button>
+          @if (editingCommentId !== null) {
+            <button type="button" class="btn-back btn-secondary" (click)="cancelEditComment()">Abbrechen</button>
+          }
+        </div>
+      </form>
+
+      @if (currentTour.tourComments.length > 0) {
+        <div class="comments-list">
+          @for (comment of currentTour.tourComments; track comment.id) {
+            <div class="comment-card">
+              <div class="comment-header">
+                <strong>{{ comment.title }}</strong>
+                <span class="comment-author">von {{ comment.author }}</span>
+              </div>
+              <p class="comment-id">Log ID: {{ comment.id }}</p>
+              <div class="comment-ratings">
+                <span class="rating">Schwierigkeit: {{ '★'.repeat(comment.difficulty) }}{{ '☆'.repeat(5 - comment.difficulty) }}</span>
+                <span class="rating">Genuss: {{ '★'.repeat(comment.enjoyment) }}{{ '☆'.repeat(5 - comment.enjoyment) }}</span>
+              </div>
+              @if (comment.comment) {
+                <p class="comment-text">{{ comment.comment }}</p>
+              }
+              <div class="comment-actions">
+                <button type="button" class="btn-back btn-small" (click)="startEditComment(comment)">Bearbeiten</button>
+                <button type="button" class="btn-back btn-small btn-danger" (click)="requestDeleteComment(comment.id)">Löschen</button>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="no-comments">Noch keine Kommentare vorhanden.</p>
+      }
+    </section>
+  </div>
+} @else {
+  <div class="tour-not-found">
+    <h1>Tour nicht gefunden</h1>
+    <p>Die angeforderte Tour existiert nicht.</p>
+  </div>
+}
+
+@if (isDeleteTourModalOpen) {
+  <app-confirm-modal
+    title="Tour löschen"
+    message="Möchtest du diese Tour wirklich löschen?"
+    confirmText="Löschen"
+    cancelText="Abbrechen"
+    (confirmed)="confirmDeleteCurrentTour()"
+    (cancelled)="cancelDeleteCurrentTour()">
+  </app-confirm-modal>
+}
+
+@if (isDeleteCommentModalOpen) {
+  <app-confirm-modal
+    title="Kommentar löschen"
+    message="Möchtest du diesen Kommentar wirklich löschen?"
+    confirmText="Löschen"
+    cancelText="Abbrechen"
+    (confirmed)="confirmDeleteComment()"
+    (cancelled)="cancelDeleteComment()">
+  </app-confirm-modal>
+}
+

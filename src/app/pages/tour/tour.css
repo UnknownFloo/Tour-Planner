@@ -1,0 +1,281 @@
+.tour-container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--space-4);
+  color: var(--text);
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--space-4);
+}
+
+.back-button {
+  margin-bottom: 0;
+}
+
+.btn-back {
+  /* styled globally */
+}
+
+.btn-back:hover {
+  /* styled globally */
+}
+
+.tour-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+  align-items: start;
+  min-height: 0;
+}
+
+.tour-info {
+  background: var(--bg-elevated);
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-1);
+  height: 100%;
+  overflow: auto;
+}
+
+.tour-title {
+  margin: 0 0 10px 0;
+  font-size: 1.8rem;
+  color: var(--text);
+  letter-spacing: -0.03em;
+}
+
+.tour-author, .tour-vehicle, .tour-description {
+  margin: 4px 0;
+  color: var(--text-muted);
+  font-size: 0.98rem;
+}
+
+.tour-attributes {
+  display: grid;
+  gap: 2px;
+}
+
+.tour-description {
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.tour-map {
+  height: 100%;
+  min-height: 0;
+}
+
+.tour-comments {
+  width: 100%;
+  margin-top: 14px;
+  background: var(--bg-elevated);
+  padding: 18px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-1);
+}
+
+.map-container {
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-1);
+}
+
+.tour-comments h2 {
+  color: var(--text);
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+}
+
+.comment-form {
+  background: color-mix(in srgb, var(--bg-elevated) 92%, rgba(79, 70, 229, 0.04));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 15px;
+}
+
+.comment-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  font-weight: 650;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  /* styled globally */
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  /* styled globally */
+}
+
+.comment-form-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.comment-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  box-shadow: var(--shadow-1);
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.comment-card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-2);
+  border-color: rgba(79, 70, 229, 0.18);
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.comment-header strong {
+  font-size: 1.1em;
+  color: var(--text);
+}
+
+.comment-author {
+  color: var(--text-subtle);
+  font-size: 0.9em;
+}
+
+.comment-id {
+  margin: 0 0 8px;
+  color: var(--text-subtle);
+  font-size: 0.82rem;
+}
+
+.comment-ratings {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.rating {
+  font-size: 0.85em;
+  color: var(--text-muted);
+}
+
+.comment-text {
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin: 0;
+  font-size: 0.95em;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+.comment-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 0.85em;
+}
+
+.btn-secondary {
+  background: color-mix(in srgb, var(--text) 8%, white 92%);
+  color: var(--text);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+.btn-secondary:hover {
+  background: color-mix(in srgb, var(--text) 12%, white 88%);
+}
+
+.btn-danger {
+  background: linear-gradient(180deg, var(--danger) 0%, var(--danger-strong) 100%);
+}
+
+.btn-danger:hover {
+  /* handled by gradient */
+}
+
+.no-comments {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 15px;
+}
+
+.tour-not-found {
+  text-align: center;
+  padding: 50px 20px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  margin: 20px auto;
+  max-width: 600px;
+  box-shadow: var(--shadow-1);
+}
+
+.tour-not-found h1 {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.tour-not-found p {
+  color: #999;
+}
+
+@media (max-width: 768px) {
+  .tour-container {
+    min-height: auto;
+  }
+
+  .tour-content {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .map-container {
+    height: 320px;
+  }
+
+  .comment-form-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.leaflet-shell {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}

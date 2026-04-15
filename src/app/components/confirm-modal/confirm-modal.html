@@ -1,0 +1,15 @@
+<div class="modal-backdrop" (click)="cancelled.emit()">
+  <section
+    class="modal-card"
+    role="dialog"
+    aria-modal="true"
+    [attr.aria-label]="title()"
+    (click)="$event.stopPropagation()">
+    <h2>{{ title() }}</h2>
+    <p>{{ message() }}</p>
+    <div class="modal-actions">
+      <button type="button" class="btn-cancel" (click)="cancelled.emit()">{{ cancelText() }}</button>
+      <button type="button" class="btn-confirm" (click)="confirmed.emit()">{{ confirmText() }}</button>
+    </div>
+  </section>
+</div>

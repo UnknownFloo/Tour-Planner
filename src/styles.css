@@ -1,3 +1,309 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import 'tailwindcss';
+@import 'leaflet/dist/leaflet.css';
+
+:root {
+  color-scheme: light;
+
+  /* Brand */
+  --brand: #4f46e5;
+  --brand-strong: #4338ca;
+  --brand-soft: #eef2ff;
+
+  /* Semantic */
+  --danger: #dc2626;
+  --danger-strong: #b91c1c;
+  --success: #16a34a;
+  --success-strong: #15803d;
+
+  /* Neutrals */
+  --bg: #f8fafc;
+  --bg-elevated: #ffffff;
+  --bg-elevated-2: #f8fafc;
+  --border: rgba(15, 23, 42, 0.12);
+  --border-strong: rgba(15, 23, 42, 0.18);
+  --text: #0f172a;
+  --text-muted: #475569;
+  --text-subtle: #64748b;
+
+  /* Effects */
+  --shadow-1: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-2: 0 10px 30px rgba(15, 23, 42, 0.10);
+  --ring: 0 0 0 4px rgba(79, 70, 229, 0.18);
+
+  /* Radius */
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 18px;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+
+  /* Layout */
+  --container: 1200px;
+
+  /* Backwards compatibility (existing components) */
+  --page-bg: radial-gradient(1200px 800px at 20% 0%, rgba(79, 70, 229, 0.10), transparent 55%),
+    radial-gradient(1000px 700px at 90% 10%, rgba(14, 165, 233, 0.10), transparent 50%),
+    linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  --surface: var(--bg-elevated);
+  --surface-muted: var(--bg-elevated-2);
+  --text-main: var(--text);
+  --primary: var(--brand);
+  --primary-hover: var(--brand-strong);
+  --danger-hover: var(--danger-strong);
+  --success-hover: var(--success-strong);
+  --shadow-soft: var(--shadow-2);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  min-height: 100dvh;
+}
+
+body {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial, "Noto Sans", "Apple Color Emoji",
+    "Segoe UI Emoji";
+  color: var(--text);
+  background: var(--page-bg);
+  line-height: 1.45;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+}
+
+::selection {
+  background: rgba(79, 70, 229, 0.18);
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+  border-radius: 10px;
+}
+
+/* Typography */
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.1rem);
+  margin: 0;
+}
+
+h2 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+/* Base layout helpers */
+.container {
+  max-width: var(--container);
+  margin: 0 auto;
+  padding: var(--space-4);
+}
+
+/* Buttons (used across pages via existing class names too) */
+.btn,
+.btn-back,
+.primary-action,
+.btn-save,
+.tour-type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-weight: 650;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease, border-color 120ms ease,
+    color 120ms ease;
+  box-shadow: var(--shadow-1);
+  user-select: none;
+}
+
+.btn:hover,
+.btn-back:hover,
+.primary-action:hover,
+.btn-save:hover,
+.tour-type:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-2);
+}
+
+.btn:active,
+.btn-back:active,
+.primary-action:active,
+.btn-save:active,
+.tour-type:active {
+  transform: translateY(0);
+}
+
+.btn:disabled,
+.btn-back:disabled,
+.primary-action:disabled,
+.btn-save:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Default primary styling for existing buttons */
+.btn-back,
+.primary-action {
+  background: linear-gradient(180deg, var(--brand) 0%, var(--brand-strong) 100%);
+  color: #fff;
+}
+
+.btn-save {
+  background: linear-gradient(180deg, var(--success) 0%, var(--success-strong) 100%);
+  color: #fff;
+}
+
+.tour-type {
+  background: rgba(79, 70, 229, 0.10);
+  border-color: rgba(79, 70, 229, 0.18);
+  color: #3730a3;
+  box-shadow: none;
+}
+
+/* Forms */
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+input,
+select,
+textarea {
+  background: #fff;
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  box-shadow: 0 1px 0 rgba(15, 23, 42, 0.02);
+  transition: box-shadow 120ms ease, border-color 120ms ease;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: rgba(79, 70, 229, 0.55);
+  box-shadow: var(--ring);
+}
+
+label {
+  color: var(--text-muted);
+}
+
+/* Cards */
+.card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-1);
+}
+
+/* Leaflet - small polish */
+.leaflet-container {
+  font: inherit;
+}
+
+/* Map container baseline (pages can still override) */
+.map-container {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-1);
+}
+
+/* Leaflet UI integration */
+.leaflet-control-container .leaflet-control {
+  border: 1px solid rgba(15, 23, 42, 0.12) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12) !important;
+  overflow: hidden;
+}
+
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: var(--text) !important;
+}
+
+.leaflet-bar a:hover {
+  background: rgba(255, 255, 255, 1) !important;
+}
+
+.leaflet-control-zoom a {
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+  font-weight: 800;
+}
+
+.leaflet-touch .leaflet-bar a {
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 16px !important;
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18) !important;
+}
+
+.leaflet-popup-content {
+  margin: 12px 14px !important;
+  color: var(--text);
+  font: inherit;
+}
+
+.leaflet-popup-tip {
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.10) !important;
+}
+
+.leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(15, 23, 42, 0.10);
+  border-radius: 999px;
+  padding: 4px 10px !important;
+  color: var(--text-muted) !important;
+}
+
+.leaflet-control-attribution a {
+  color: color-mix(in srgb, var(--brand) 70%, black 30%) !important;
+}

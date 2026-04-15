@@ -1,0 +1,9 @@
+.map-container {
+  width: min(100%, 1100px);
+  height: clamp(320px, 55vh, 620px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-1);
+}

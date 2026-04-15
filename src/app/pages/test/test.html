@@ -1,0 +1,7 @@
+<div class="map-container">
+    <app-leaflet [interactable]=true (startCoordinateClicked)="updateStartCordinate($event)" (endCoordinateClicked)="updateEndCordinate($event)"></app-leaflet>
+</div>
+
+<p>Coords:</p>
+<p> Start: {{startCordinate}} </p>
+<p> End: {{endCordinate}} </p>

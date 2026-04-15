@@ -1,0 +1,49 @@
+<div class="dashboard-page">
+  <main class="dashboard-main">
+    <header class="dashboard-header">
+      <h1>Tour Planner</h1>
+      <p>Browse all tours from mock data. Click a tour card to open its detail page.</p>
+      <a routerLink="/create-tour" class="primary-action">+ Neue Tour erstellen</a>
+    </header>
+
+    <section class="tour-grid-section">
+      <div class="tour-grid">
+        <article class="tour-card" *ngFor="let tour of tours$ | async">
+            <div class="tour-card-title">
+              <div>
+                <h2>{{ tour.name }} <span class="tour-id">#{{ tour.id }}</span></h2>
+                <p class="tour-author">Created by {{ tour.author }}</p>
+                <p class="tour-author">Vehicle: {{ tour.vehicleType }}</p>
+                <p class="tour-description">{{ tour.description }}</p>
+              </div>
+              <div class="tour-actions">
+                <a class="tour-type" [routerLink]="['/tour', tour.id]">Show Tour</a>
+              </div>
+            </div>
+
+            <div class="tour-coordinates">
+              <div class="coord-pair">
+                <dt>Start</dt>
+                <dd>{{ tour.startCoordinate.lat | number:'1.6-6' }}, {{ tour.startCoordinate.lng | number:'1.6-6' }}</dd>
+              </div>
+              <div class="coord-pair">
+                <dt>End</dt>
+                <dd>{{ tour.endCoordinate.lat | number:'1.6-6' }}, {{ tour.endCoordinate.lng | number:'1.6-6' }}</dd>
+              </div>
+            </div>
+        </article>
+      </div>
+    </section>
+  </main>
+</div>
+
+@if (isDeleteModalOpen) {
+  <app-confirm-modal
+    title="Tour löschen"
+    message="Möchtest du diese Tour wirklich löschen?"
+    confirmText="Löschen"
+    cancelText="Abbrechen"
+    (confirmed)="confirmDeleteTour()"
+    (cancelled)="cancelDeleteTour()">
+  </app-confirm-modal>
+}
