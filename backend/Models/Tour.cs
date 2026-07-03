@@ -63,13 +63,10 @@ namespace TourPlanner.Api.Models
                 return 0.0;
             }
 
-            var averageDifficulty = TourLogs.Count == 0 ? 0.0 : (double)TourLogs.Sum(log => log.Difficulty) / TourLogs.Count;
-            var score = 5.0
-                - (DistanceKm / 20.0)
-                - (EstimatedTimeMinutes / 120.0)
-                - (averageDifficulty / 2.0);
-
-            return Math.Max(0.0, Math.Min(5.0, score));
+            var averageDifficulty = TourLogs.Count == 0 ? 0.0 : (double)TourLogs.Sum(log => log.Rating) / TourLogs.Count;
+            var score = (double)TourLogs.Sum(log => log.Rating) / TourLogs.Count;
+                
+            return score;
         }
     }
 }
