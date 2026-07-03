@@ -46,3 +46,4 @@ Thumbs.db
 
 backend/bin/
 backend/obj/
+backend/db/development.sql

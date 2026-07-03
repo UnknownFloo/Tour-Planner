@@ -43,20 +43,3 @@ CREATE INDEX IF NOT EXISTS idx_tourlogs_tourid ON "TourLogs"("TourId");
 CREATE INDEX IF NOT EXISTS idx_tours_name ON "Tours"("Name");
 CREATE INDEX IF NOT EXISTS idx_tours_transporttype ON "Tours"("TransportType");
 
--- Optional full-text search vector for tour data
-ALTER TABLE "Tours" ADD COLUMN IF NOT EXISTS "SearchVector" tsvector;
-UPDATE "Tours" SET "SearchVector" = to_tsvector('german', coalesce("Name", '') || ' ' || coalesce("Description", '') || ' ' || coalesce("TransportType", ''));
-CREATE INDEX IF NOT EXISTS idx_tours_searchvector ON "Tours" USING GIN ("SearchVector");
-
-CREATE OR REPLACE FUNCTION tours_search_vector_trigger() RETURNS trigger AS $$
-begin
-  new."SearchVector" := to_tsvector('german', coalesce(new."Name", '') || ' ' || coalesce(new."Description", '') || ' ' || coalesce(new."TransportType", ''));
-  return new;
-end
-$$ LANGUAGE plpgsql;
-
-DROP TRIGGER IF EXISTS tours_search_vector_update ON "Tours";
-CREATE TRIGGER tours_search_vector_update
-BEFORE INSERT OR UPDATE
-ON "Tours"
-FOR EACH ROW EXECUTE FUNCTION tours_search_vector_trigger();

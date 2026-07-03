@@ -8,4 +8,10 @@ services:
       POSTGRES_DB: tourplanner
     ports:
       - "5432:5432"
-    
+    volumes:
+      - database_data:/var/lib/postgresql/data
+      - ./db/test.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  database_data:
+    driver: local
