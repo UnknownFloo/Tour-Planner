@@ -30,14 +30,6 @@
                   [src]="tour.imageUrl || 'dummy-image.jpg'" 
                   alt="Tour image" 
                   class="tour-card-image" />
-                <div class="tour-card-checkbox">
-                  <input 
-                    type="checkbox" 
-                    [checked]="vm.isTourSelected(tour.id)"
-                    (change)="vm.toggleTourSelection(tour.id)"
-                    [id]="'tour-' + tour.id!">
-                  <label [for]="'tour-' + tour.id"></label>
-                </div>
             </div>
             <div class="tour-card-details">
               <div class="tour-card-title">
