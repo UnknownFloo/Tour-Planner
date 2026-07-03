@@ -1,4 +1,4 @@
-import { inject, signal } from '@angular/core';
+import { inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
@@ -46,6 +46,30 @@ export class DiscoverViewModel {
         ),
         { initialValue: [] as PublicTour[] }
     );
+    readonly searchQuery = signal('');
+    readonly filteredTours = computed(() => {
+        const q = this.searchQuery().trim().toLowerCase();
+        const all = this.tours();
+        if (!q) return all;
+
+        const results = all
+            .map(t => {
+                const hay = `${t.name} ${t.description} ${t.author} ${t.vehicleType}`.toLowerCase();
+                let score = 0;
+                let idx = hay.indexOf(q);
+                while (idx !== -1) {
+                    score++;
+                    idx = hay.indexOf(q, idx + q.length);
+                }
+                if (t.name.toLowerCase().startsWith(q)) score += 3;
+                return { tour: t, score };
+            })
+            .filter(r => r.score > 0)
+            .sort((a, b) => b.score - a.score)
+            .map(r => r.tour);
+
+        return results;
+    });
     readonly title = signal('Öffentliche Tours');
 
     private mapDtoToTour(dto: RawPublicTourDto): PublicTour {

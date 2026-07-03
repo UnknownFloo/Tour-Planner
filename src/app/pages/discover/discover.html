@@ -6,12 +6,21 @@
         <p>Sieh dir Tours von anderen Nutzern an und hinterlasse Kommentare.</p>
         <p>Klicke auf eine Tour, um zur Detailseite zu gelangen und dort Kommentare zu schreiben.</p>
       </div>
-      <a routerLink="/dashboard" class="btn-back">← Zurück</a>
+      <div class="discover-header-actions">
+        <input
+          type="search"
+          placeholder="Suche öffentliche Tours (Name, Autor, Beschreibung)"
+          class="search-input"
+          [value]="vm.searchQuery()"
+          (input)="vm.searchQuery.set($any($event.target).value)"
+        />
+        <a routerLink="/dashboard" class="btn-back">← Zurück</a>
+      </div>
     </header>
 
     <section class="tour-grid-section">
       <div class="tour-grid">
-        @for (tour of vm.tours(); track tour.id) {
+        @for (tour of vm.filteredTours(); track tour.id) {
           <article class="tour-card">
             @if (tour.imageUrl) {
               <div class="tour-card-media">

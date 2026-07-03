@@ -1,8 +1,34 @@
-import { inject, signal } from '@angular/core';
+import { inject, signal, computed } from '@angular/core';
 import { TourService, Tour } from '../../services/tour.service';
 
 export class DashboardViewModel {
   readonly tours = signal<Tour[]>([]);
+  readonly searchQuery = signal('');
+  readonly filteredTours = computed(() => {
+    const q = this.searchQuery().trim().toLowerCase();
+    const all = this.tours();
+    if (!q) return all;
+
+    const results = all
+      .map(t => {
+        const hay = `${t.name} ${t.description} ${t.author ?? ''} ${t.vehicleType}`.toLowerCase();
+        // basic scoring: more occurrences -> higher score
+        let score = 0;
+        let idx = hay.indexOf(q);
+        while (idx !== -1) {
+          score++;
+          idx = hay.indexOf(q, idx + q.length);
+        }
+        // if q is fully included in fields, add a small bonus for exact field starts
+        if (t.name.toLowerCase().startsWith(q)) score += 3;
+        return { tour: t, score };
+      })
+      .filter(r => r.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map(r => r.tour);
+
+    return results;
+  });
   readonly selectedTourIds = signal<Set<number>>(new Set());
   readonly isDeleteModalOpen = signal(false);
   readonly pendingDeleteTourId = signal<number | null>(null);

@@ -4,6 +4,13 @@
       <h1>Tour Planner</h1>
       <p>Browse all tours from mock data. Click a tour card to open its detail page.</p>
       <div class="header-actions">
+        <input
+          type="search"
+          placeholder="Suche (Name, Autor, Beschreibung, Fahrzeug)"
+          class="search-input"
+          [value]="vm.searchQuery()"
+          (input)="vm.searchQuery.set($any($event.target).value)"
+        />
         <a routerLink="/create-tour" class="primary-action">+ Neue Tour erstellen</a>
         <a routerLink="/discover" class="primary-action">🌍 Öffentliche Tours</a>
         <button type="button" class="primary-action" (click)="vm.exportSelectedTours()" [disabled]="vm.tours().length === 0">📥 Exportieren</button>
@@ -16,7 +23,7 @@
 
     <section class="tour-grid-section">
       <div class="tour-grid">
-        @for (tour of vm.tours(); track tour.id) {
+        @for (tour of vm.filteredTours(); track tour.id) {
         <article class="tour-card">
             <div class="tour-card-media">
                 <img 
