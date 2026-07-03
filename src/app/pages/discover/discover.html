@@ -1,0 +1,60 @@
+<div class="discover-page">
+  <main class="discover-main">
+    <header class="discover-header">
+      <div>
+        <h1>🌍 Öffentliche Tours entdecken</h1>
+        <p>Sieh dir Tours von anderen Nutzern an und hinterlasse Kommentare.</p>
+        <p>Klicke auf eine Tour, um zur Detailseite zu gelangen und dort Kommentare zu schreiben.</p>
+      </div>
+      <a routerLink="/dashboard" class="btn-back">← Zurück</a>
+    </header>
+
+    <section class="tour-grid-section">
+      <div class="tour-grid">
+        @for (tour of vm.tours(); track tour.id) {
+          <article class="tour-card">
+            @if (tour.imageUrl) {
+              <div class="tour-card-media">
+                <img [src]="tour.imageUrl" alt="Tour image" class="tour-card-image" />
+              </div>
+            }
+            <div class="tour-card-title">
+              <div>
+                <h2>{{ tour.name }}</h2>
+                <p class="tour-author">Von {{ tour.author }}</p>
+                <p class="tour-vehicle">{{ tour.vehicleType }}</p>
+                <p class="tour-description">{{ tour.description }}</p>
+              </div>
+              <div class="tour-stats">
+                <span class="stat">👍 {{ tour.popularity }}</span>
+                <span class="stat">👨‍👩‍👧 {{ tour.childFriendliness | number:'1.1-1' }}/5</span>
+              </div>
+            </div>
+            <div class="tour-card-actions">
+              <a [routerLink]="['/tour', tour.id]" class="btn-back">Details & Kommentare</a>
+            </div>
+
+            <div class="tour-coordinates">
+              <div class="coord-pair">
+                <dt>Start</dt>
+                <dd>{{ tour.startCoordinate.lat | number:'1.6-6' }}, {{ tour.startCoordinate.lng | number:'1.6-6' }}</dd>
+              </div>
+              <div class="coord-pair">
+                <dt>Ende</dt>
+                <dd>{{ tour.endCoordinate.lat | number:'1.6-6' }}, {{ tour.endCoordinate.lng | number:'1.6-6' }}</dd>
+              </div>
+              <div class="coord-pair">
+                <dt>Distanz</dt>
+                <dd>{{ tour.distance | number:'1.2-2' }} km</dd>
+              </div>
+            </div>
+          </article>
+        } @empty {
+          <div class="empty-state">
+            <p>Noch keine öffentlichen Tours verfügbar.</p>
+          </div>
+        }
+      </div>
+    </section>
+  </main>
+</div>

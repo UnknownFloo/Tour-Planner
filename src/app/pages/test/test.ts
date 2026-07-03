@@ -1,6 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { LeafletComponent } from '../../components/leaflet/leaflet.component';
-import * as Leaflet from "leaflet";
+import * as Leaflet from 'leaflet';
+import { TestViewModel } from './test.view-model';
 
 @Component({
   selector: 'app-test',
@@ -9,14 +10,13 @@ import * as Leaflet from "leaflet";
   styleUrl: './test.css',
 })
 export class Test {
-  startCordinate = "Not Set";
-  endCordinate = "Not Set";
+  readonly vm = new TestViewModel();
 
-  updateStartCordinate(coords: Leaflet.LatLng) {
-    this.startCordinate = `${coords.lat}, ${coords.lng}`;
+  updateStartCoordinate(coords: Leaflet.LatLng) {
+    this.vm.updateStartCoordinate(coords);
   }
 
-  updateEndCordinate(coords: Leaflet.LatLng) {
-    this.endCordinate = `${coords.lat}, ${coords.lng}`;
+  updateEndCoordinate(coords: Leaflet.LatLng) {
+    this.vm.updateEndCoordinate(coords);
   }
 }

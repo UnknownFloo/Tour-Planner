@@ -1,0 +1,26 @@
+<section class="auth-shell">
+  <div class="auth-header">
+    <div>
+      <p class="eyebrow">Tour Planner</p>
+      <h1>Anmelden</h1>
+      <p>Erstelle und verwalte deine individuellen Touren sicher.</p>
+    </div>
+  </div>
+
+  <form class="auth-form" (ngSubmit)="vm.submit()">
+    <label for="username">Benutzername</label>
+    <input id="username" type="text" [(ngModel)]="vm.username" name="username" required />
+
+    <label for="password">Passwort</label>
+    <input id="password" type="password" [(ngModel)]="vm.password" name="password" required />
+
+    <button type="submit">Anmelden</button>
+
+    <p class="error" *ngIf="vm.error()">{{ vm.error() }}</p>
+
+    <div class="auth-footer">
+      <span>Noch keinen Account?</span>
+      <a routerLink="/register">Registrieren</a>
+    </div>
+  </form>
+</section>

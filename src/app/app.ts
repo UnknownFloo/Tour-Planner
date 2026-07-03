@@ -1,12 +1,21 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { NgIf } from '@angular/common';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, NgIf],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
 
+export class App {
+  protected readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
-export class App {}
+  logout() {
+    this.authService.logout();
+    void this.router.navigate(['/login']);
+  }
+}

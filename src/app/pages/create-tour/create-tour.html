@@ -10,22 +10,22 @@
       <form class="tour-form">
         <div class="form-group">
           <label for="title">Titel:</label>
-          <input id="title" type="text" [(ngModel)]="title" name="title" required>
-        </div>
-
-        <div class="form-group">
-          <label for="author">Autor:</label>
-          <input id="author" type="text" [(ngModel)]="author" name="author" required>
+          <input id="title" type="text" [(ngModel)]="vm.title" name="title" required>
         </div>
 
         <div class="form-group">
           <label for="description">Beschreibung:</label>
-          <textarea id="description" [(ngModel)]="description" name="description" rows="2" placeholder="Beschreibe deine Tour..." required></textarea>
+          <textarea id="description" [(ngModel)]="vm.description" name="description" rows="2" placeholder="Beschreibe deine Tour..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="imageUrl">Bild-URL (optional)</label>
+          <input id="imageUrl" type="url" [(ngModel)]="vm.imageUrl" name="imageUrl" placeholder="https://...">
         </div>
 
         <div class="form-group">
           <label for="vehicle">Fahrzeug:</label>
-          <select id="vehicle" [(ngModel)]="vehicleType" name="vehicle">
+          <select id="vehicle" [(ngModel)]="vm.vehicleType" name="vehicle">
             <option value="cycling-regular">Fahrrad (normal)</option>
             <option value="cycling-road">Rennrad</option>
             <option value="cycling-mountain">Mountainbike</option>
@@ -35,7 +35,16 @@
             <option value="foot-hiking">Wandern</option>
           </select>
         </div>
-        <button type="button" class="btn-save" (click)="saveTour()" [disabled]="!isTourFormValid()">Tour speichern</button>
+
+        <div class="form-group">
+          <label>Sichtbarkeit:</label>
+          <div class="privacy-options">
+            <label><input type="radio" name="visibility" [(ngModel)]="vm.isPublic" [value]="true"> Öffentlich</label>
+            <label><input type="radio" name="visibility" [(ngModel)]="vm.isPublic" [value]="false"> Privat</label>
+          </div>
+        </div>
+
+        <button type="button" class="btn-save" (click)="vm.saveTour()" [disabled]="!vm.isTourFormValid()">Tour speichern</button>
       </form>
     </aside>
 
@@ -45,11 +54,11 @@
       <div class="map-container">
         <app-leaflet
           [interactable]="true"
-          [vehicleType]="vehicleType"
-          (startCoordinateClicked)="onStartSelected($event)"
-          (endCoordinateClicked)="onEndSelected($event)"
-          (distance)="setDistance($event)"
-          (time)="setTime($event)">
+          [vehicleType]="vm.vehicleType"
+          (startCoordinateClicked)="vm.onStartSelected($event)"
+          (endCoordinateClicked)="vm.onEndSelected($event)"
+          (distance)="vm.setDistance($event)"
+          (time)="vm.setTime($event)">
         </app-leaflet>
       </div>
     </section>

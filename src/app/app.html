@@ -1,1 +1,14 @@
-﻿<router-outlet />
+﻿<nav class="app-nav">
+  <a routerLink="/dashboard">Dashboard</a>
+
+  <ng-container *ngIf="!authService.username(); else loggedInNav">
+    <a routerLink="/login">Login</a>
+    <a routerLink="/register">Register</a>
+  </ng-container>
+
+  <ng-template #loggedInNav>
+    <span class="nav-user">Hallo, {{ authService.username() }}</span>
+    <button type="button" class="nav-logout" (click)="logout()">Logout</button>
+  </ng-template>
+</nav>
+<router-outlet />

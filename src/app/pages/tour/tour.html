@@ -1,4 +1,4 @@
-@if (tour(); as currentTour) {
+@if (vm.tour(); as currentTour) {
   <div class="tour-container">
     <div class="back-button">
       <a routerLink="/dashboard" class="btn-back">← Zurück zum Dashboard</a>
@@ -7,21 +7,23 @@
     <div class="tour-content">
       <aside class="tour-info">
         <h1 class="tour-title">{{ currentTour.name }}</h1>
+        <img *ngIf="currentTour.imageUrl" [src]="currentTour.imageUrl" alt="Tour media" class="tour-image" />
         <div class="tour-attributes">
           <p class="tour-author"><strong>ID:</strong> {{ currentTour.id }}</p>
           <p class="tour-author"><strong>Von:</strong> {{ currentTour.author }}</p>
           <p class="tour-vehicle"><strong>Fahrzeug:</strong> {{ currentTour.vehicleType }}</p>
           <p class="tour-author"><strong>Start:</strong> {{ currentTour.startCoordinate.lat | number:'1.6-6' }}, {{ currentTour.startCoordinate.lng | number:'1.6-6' }}</p>
           <p class="tour-author"><strong>Ende:</strong> {{ currentTour.endCoordinate.lat | number:'1.6-6' }}, {{ currentTour.endCoordinate.lng | number:'1.6-6' }}</p>
-          <p class="tour-author"><strong>Distanz:</strong> {{ distance | number:'1.2-2' }} km</p>
-          <p class="tour-author"><strong>Zeit:</strong> {{ time | number:'1.0-0' }} min</p>
+          <p class="tour-author"><strong>Distanz:</strong> {{ vm.distance() | number:'1.2-2' }} km</p>
+          <p class="tour-author"><strong>Zeit:</strong> {{ vm.time() | number:'1.0-0' }} min</p>
           @if (currentTour.description) {
             <p class="tour-description"><strong>Beschreibung:</strong> {{ currentTour.description }}</p>
           }
         </div>
-        <div class="flex gap-2 mt-4 mb-4">
+        <div class="flex gap-2 mt-4 mb-4" *ngIf="vm.canEditTour()">
           <a [routerLink]="['/edit-tour', currentTour.id]" class="btn-back">Tour bearbeiten</a>
-          <button type="button" class="btn-back" (click)="deleteCurrentTour()">Tour löschen</button>
+          <button type="button" class="btn-back" (click)="vm.togglePublic()">{{ currentTour.isPublic ? 'Privat machen' : 'Öffentlich machen' }}</button>
+          <button type="button" class="btn-back" (click)="vm.deleteCurrentTour()">Tour löschen</button>
         </div>
         
       </aside>
@@ -47,15 +49,14 @@
         <div class="comment-form-grid">
           <div class="form-group">
             <label for="comment-title">Titel</label>
-            <input id="comment-title" type="text" [(ngModel)]="commentTitle" name="commentTitle" required>
+            <input id="comment-title" type="text" [(ngModel)]="vm.commentTitle" name="commentTitle" required>
           </div>
-          <div class="form-group">
-            <label for="comment-author">Autor</label>
-            <input id="comment-author" type="text" [(ngModel)]="commentAuthor" name="commentAuthor" required>
+          <div class="form-group comment-author-note">
+            <p>Der Kommentar wird automatisch mit deinem Benutzernamen versehen.</p>
           </div>
           <div class="form-group">
             <label for="comment-difficulty">Schwierigkeit</label>
-            <select id="comment-difficulty" [(ngModel)]="commentDifficulty" name="commentDifficulty">
+            <select id="comment-difficulty" [(ngModel)]="vm.commentDifficulty" name="commentDifficulty">
               <option [ngValue]="1">1</option>
               <option [ngValue]="2">2</option>
               <option [ngValue]="3">3</option>
@@ -65,7 +66,7 @@
           </div>
           <div class="form-group">
             <label for="comment-enjoyment">Genuss</label>
-            <select id="comment-enjoyment" [(ngModel)]="commentEnjoyment" name="commentEnjoyment">
+            <select id="comment-enjoyment" [(ngModel)]="vm.commentEnjoyment" name="commentEnjoyment">
               <option [ngValue]="1">1</option>
               <option [ngValue]="2">2</option>
               <option [ngValue]="3">3</option>
@@ -77,15 +78,15 @@
 
         <div class="form-group">
           <label for="comment-text">Kommentar (optional)</label>
-          <textarea id="comment-text" rows="2" [(ngModel)]="commentText" name="commentText"></textarea>
+          <textarea id="comment-text" rows="2" [(ngModel)]="vm.commentText" name="commentText"></textarea>
         </div>
 
         <div class="comment-form-actions">
           <button type="submit" class="btn-back" [disabled]="!isCommentFormValid()">
-            @if (editingCommentId !== null) {Kommentar speichern} @else {Kommentar hinzufügen}
+            @if (vm.editingCommentId() !== null) {Kommentar speichern} @else {Kommentar hinzufügen}
           </button>
-          @if (editingCommentId !== null) {
-            <button type="button" class="btn-back btn-secondary" (click)="cancelEditComment()">Abbrechen</button>
+          @if (vm.editingCommentId() !== null) {
+            <button type="button" class="btn-back btn-secondary" (click)="vm.cancelEditComment()">Abbrechen</button>
           }
         </div>
       </form>
@@ -106,9 +107,9 @@
               @if (comment.comment) {
                 <p class="comment-text">{{ comment.comment }}</p>
               }
-              <div class="comment-actions">
-                <button type="button" class="btn-back btn-small" (click)="startEditComment(comment)">Bearbeiten</button>
-                <button type="button" class="btn-back btn-small btn-danger" (click)="requestDeleteComment(comment.id)">Löschen</button>
+              <div class="comment-actions" *ngIf="vm.canEditComment(comment)">
+                <button type="button" class="btn-back btn-small" (click)="vm.startEditComment(comment)">Bearbeiten</button>
+                <button type="button" class="btn-back btn-small btn-danger" (click)="vm.requestDeleteComment(comment.id)">Löschen</button>
               </div>
             </div>
           }
@@ -125,25 +126,25 @@
   </div>
 }
 
-@if (isDeleteTourModalOpen) {
+@if (vm.isDeleteTourModalOpen()) {
   <app-confirm-modal
     title="Tour löschen"
     message="Möchtest du diese Tour wirklich löschen?"
     confirmText="Löschen"
     cancelText="Abbrechen"
-    (confirmed)="confirmDeleteCurrentTour()"
-    (cancelled)="cancelDeleteCurrentTour()">
+    (confirmed)="vm.confirmDeleteCurrentTour()"
+    (cancelled)="vm.cancelDeleteCurrentTour()">
   </app-confirm-modal>
 }
 
-@if (isDeleteCommentModalOpen) {
+@if (vm.isDeleteCommentModalOpen()) {
   <app-confirm-modal
     title="Kommentar löschen"
     message="Möchtest du diesen Kommentar wirklich löschen?"
     confirmText="Löschen"
     cancelText="Abbrechen"
-    (confirmed)="confirmDeleteComment()"
-    (cancelled)="cancelDeleteComment()">
+    (confirmed)="vm.confirmDeleteComment()"
+    (cancelled)="vm.cancelDeleteComment()">
   </app-confirm-modal>
 }
 

@@ -1,7 +1,7 @@
 <div class="map-container">
-    <app-leaflet [interactable]=true (startCoordinateClicked)="updateStartCordinate($event)" (endCoordinateClicked)="updateEndCordinate($event)"></app-leaflet>
+    <app-leaflet [interactable]=true (startCoordinateClicked)="updateStartCoordinate($event)" (endCoordinateClicked)="updateEndCoordinate($event)"></app-leaflet>
 </div>
 
 <p>Coords:</p>
-<p> Start: {{startCordinate}} </p>
-<p> End: {{endCordinate}} </p>
+<p> Start: {{vm.startCoordinate()}} </p>
+<p> End: {{vm.endCoordinate()}} </p>

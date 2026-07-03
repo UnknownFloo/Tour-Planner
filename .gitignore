@@ -44,5 +44,5 @@ __screenshots__/
 Thumbs.db
 
 
-Tour-Planner/backend/bin
-Tour-Planner/backend/obj
+backend/bin/
+backend/obj/

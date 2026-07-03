@@ -1,0 +1,17 @@
+<section class="auth-shell">
+  <h1>Registrieren</h1>
+
+  <form (ngSubmit)="vm.submit()">
+    <label for="username">Benutzername</label>
+    <input id="username" type="text" [(ngModel)]="vm.username" name="username" required />
+
+    <label for="password">Passwort</label>
+    <input id="password" type="password" [(ngModel)]="vm.password" name="password" required minlength="6" />
+
+    <button type="submit">Registrieren</button>
+    <p class="error" *ngIf="vm.error()">{{ vm.error() }}</p>
+    <p>
+      Bereits registriert? <a routerLink="/login">Anmelden</a>
+    </p>
+  </form>
+</section>

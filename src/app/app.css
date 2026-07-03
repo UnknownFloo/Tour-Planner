@@ -1,1 +1,45 @@
-﻿
+﻿.app-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+  color: white;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.14);
+}
+
+.app-nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 650;
+  padding: 0.65rem 0.95rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.app-nav a:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.nav-user {
+  font-weight: 700;
+  color: white;
+}
+
+.nav-logout {
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+  padding: 0.65rem 0.95rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.nav-logout:hover {
+  background: rgba(255, 255, 255, 0.18);
+}

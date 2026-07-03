@@ -1,9 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { firstValueFrom } from 'rxjs';
 import { LeafletComponent } from '../../components/leaflet/leaflet.component';
-import { MockDataService, Tour, vehicle } from '../../services/mockdata.service';
+import { AuthService } from '../../services/auth.service';
+import { TourService } from '../../services/tour.service';
+import { EditTourViewModel } from './edit-tour.view-model';
 
 @Component({
   selector: 'app-edit-tour',
@@ -12,104 +13,38 @@ import { MockDataService, Tour, vehicle } from '../../services/mockdata.service'
   styleUrl: './edit-tour.css',
 })
 export class EditTour implements OnInit {
-  private readonly mockDataService = inject(MockDataService);
-  private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private tourService = inject(TourService);
 
-  private editTourId: number | null = null;
+  readonly vm = new EditTourViewModel(this.tourService, this.authService, this.router, this.route);
 
-  title = '';
-  author = '';
-  description = '';
-  vehicleType: vehicle = 'cycling-regular';
-  startCoord: {lat: number, lng: number} | null = null;
-  endCoord: {lat: number, lng: number} | null = null;
-
-  distance = 0;
-  time = 0;
-
-  setDistance(distance: number) {
-    this.distance = distance / 1000;
-  }
-
-  setTime(time: number) {
-    this.time = time / 60;
-  }
-
-  async ngOnInit() {
-    const idParam = this.route.snapshot.paramMap.get('id');
-    const editId = Number(idParam);
-    if (!idParam || !Number.isFinite(editId)) {
-      void this.router.navigate(['/dashboard']);
-      return;
-    }
-
-    const tour = await firstValueFrom(this.mockDataService.getTourByID(editId));
-    if (!tour) {
-      void this.router.navigate(['/dashboard']);
-      return;
-    }
-
-    this.editTourId = tour.id;
-    this.title = tour.name;
-    this.author = tour.author;
-    this.description = tour.description;
-    this.vehicleType = tour.vehicleType;
-    this.startCoord = tour.startCoordinate;
-    this.endCoord = tour.endCoordinate;
+  ngOnInit() {
+    void this.vm.ngOnInit();
   }
 
   onStartSelected(coord: {lat: number, lng: number}) {
-    this.startCoord = coord;
+    this.vm.onStartSelected(coord);
   }
 
   onEndSelected(coord: {lat: number, lng: number}) {
-    this.endCoord = coord;
+    this.vm.onEndSelected(coord);
   }
 
-  isTourFormValid() {
-    return this.title.trim().length > 0
-      && this.author.trim().length > 0
-      && this.description.trim().length > 0
-      && this.hasValidCoordinates();
+  isTourFormValid(): boolean {
+    return this.vm.isTourFormValid();
   }
 
   async saveTour() {
-    if (!this.editTourId || !this.isTourFormValid()) {
-      alert('Bitte alle Felder ausfüllen und Start/Ende auf der Karte auswählen.');
-      return;
-    }
-
-    const currentTour = await firstValueFrom(this.mockDataService.getTourByID(this.editTourId));
-    if (!currentTour) {
-      void this.router.navigate(['/dashboard']);
-      return;
-    }
-
-    const updatedTour: Tour = {
-      id: currentTour.id,
-      name: this.title.trim(),
-      author: this.author.trim(),
-      description: this.description.trim(),
-      startCoordinate: this.startCoord!,
-      endCoordinate: this.endCoord!,
-      vehicleType: this.vehicleType,
-      tourComments: currentTour.tourComments,
-      distance: this.distance,
-      time: this.time
-    };
-
-    this.mockDataService.updateTour(updatedTour);
-    void this.router.navigate(['/dashboard']);
+    await this.vm.saveTour();
   }
 
-  private hasValidCoordinates() {
-    if (!this.startCoord || !this.endCoord) {
-      return false;
-    }
+  setDistance(distance: number) {
+    this.vm.setDistance(distance);
+  }
 
-    const hasValidStart = Number.isFinite(this.startCoord.lat) && Number.isFinite(this.startCoord.lng);
-    const hasValidEnd = Number.isFinite(this.endCoord.lat) && Number.isFinite(this.endCoord.lng);
-    return hasValidStart && hasValidEnd;
+  setTime(time: number) {
+    this.vm.setTime(time);
   }
 }

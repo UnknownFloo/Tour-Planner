@@ -29,6 +29,15 @@
   min-height: 0;
 }
 
+.tour-image {
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+  margin-bottom: 16px;
+  object-fit: cover;
+  max-height: 260px;
+}
+
 .tour-info {
   background: var(--bg-elevated);
   padding: 18px;
