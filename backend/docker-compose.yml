@@ -1,0 +1,11 @@
+services:
+  database:
+    image: postgres
+    container_name: tourplanner-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tourplanner
+    ports:
+      - "5432:5432"
+    
