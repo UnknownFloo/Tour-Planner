@@ -329,21 +329,28 @@ export class TourService {
   private mapLogDtoToComment = (log: TourLogDto): TourComment => {
     let metadata: { title?: string; author?: string; authorId?: number; comment?: string } | null = null;
     try {
-      if (log.comment) {
-        metadata = JSON.parse(log.comment);
-      }
-    } catch {
-      metadata = null;
+    if (log.comment) {
+      const parsed = JSON.parse(log.comment);
+      // Keys case-insensitiv normalisieren (deckt alte PascalCase-Einträge ab)
+      metadata = {
+        title: parsed.title ?? parsed.Title,
+        author: parsed.author ?? parsed.Author,
+        authorId: parsed.authorId ?? parsed.AuthorId,
+        comment: parsed.comment ?? parsed.Comment
+      };
     }
+  } catch {
+    metadata = null;
+  }
 
-    return {
-      id: log.id ?? 0,
-      title: metadata?.title ?? `Log #${log.id ?? 0}`,
-      author: metadata?.author ?? 'System',
-      authorId: metadata?.authorId ?? undefined,
-      difficulty: log.difficulty,
-      enjoyment: log.rating,
-      comment: metadata?.comment ?? log.comment ?? ''
-    };
+  return {
+    id: log.id ?? 0,
+    title: metadata?.title ?? `Log #${log.id ?? 0}`,
+    author: metadata?.author ?? 'System',
+    authorId: metadata?.authorId ?? undefined,
+    difficulty: log.difficulty,
+    enjoyment: log.rating,
+    comment: metadata?.comment ?? ''
+  };
   };
 }
