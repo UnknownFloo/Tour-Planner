@@ -63,7 +63,6 @@ namespace TourPlanner.Api.Models
                 return 0.0;
             }
 
-            var averageDifficulty = TourLogs.Count == 0 ? 0.0 : (double)TourLogs.Sum(log => log.Rating) / TourLogs.Count;
             var score = (double)TourLogs.Sum(log => log.Rating) / TourLogs.Count;
                 
             return score;
