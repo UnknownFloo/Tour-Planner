@@ -15,7 +15,7 @@
           <p class="tour-author"><strong>Start:</strong> {{ currentTour.startCoordinate.lat | number:'1.6-6' }}, {{ currentTour.startCoordinate.lng | number:'1.6-6' }}</p>
           <p class="tour-author"><strong>Ende:</strong> {{ currentTour.endCoordinate.lat | number:'1.6-6' }}, {{ currentTour.endCoordinate.lng | number:'1.6-6' }}</p>
           <p class="tour-author"><strong>Distanz:</strong> {{ vm.distance() | number:'1.2-2' }} km</p>
-          <p class="tour-author"><strong>Zeit:</strong> {{ vm.time() | number:'1.0-0' }} min</p>
+          <p class="tour-author"><strong>Zeit:</strong> {{ vm.time() | number:'1.2-2' }} min</p>
           @if (currentTour.description) {
             <p class="tour-description"><strong>Beschreibung:</strong> {{ currentTour.description }}</p>
           }
